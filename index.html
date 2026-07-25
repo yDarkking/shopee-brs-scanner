@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Ajusta Aí - Shopee</title>
+<meta name="description" content="Bipe os pacotes fora de rota e ajude a Shopee a ajustar o cadastro do endereço. Sua próxima rota fica mais redonda.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ajusta Aí - Shopee Motoristas">
+<meta property="og:description" content="Bipe os pacotes fora de rota e ajude a Shopee a ajustar o cadastro do endereço. Sua próxima rota fica mais redonda.">
+<meta property="og:image" content="https://ydarkking.github.io/shopee-brs-scanner/og-image.png">
+<meta property="og:url" content="https://ydarkking.github.io/shopee-brs-scanner/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ajusta Aí - Shopee Motoristas">
+<meta name="twitter:description" content="Bipe os pacotes fora de rota e ajude a Shopee a ajustar o cadastro do endereço.">
+<meta name="twitter:image" content="https://ydarkking.github.io/shopee-brs-scanner/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -30,7 +40,8 @@
     color: #fff; padding: 18px 22px 14px; position: sticky; top: 0; z-index: 10;
     box-shadow: 0 6px 22px rgba(199,58,30,.28);
   }
-  header .marca { font-size: 19px; font-weight: 900; letter-spacing: -.3px; display: flex; align-items: center; gap: 7px; }
+  header .marca { font-size: 19px; font-weight: 900; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
+  header .marca svg { width: 22px; height: 22px; flex-shrink: 0; }
   header .subtitulo { font-size: 12.5px; opacity: .92; margin-top: 3px; font-weight: 500; }
 
   .progresso { display: flex; gap: 6px; padding: 12px 22px 14px; }
@@ -109,8 +120,11 @@
     color: var(--laranja-escuro); font-weight: 700; font-size: 13px; font-family: inherit; padding: 10px; margin-top: 4px;
   }
 
-  textarea.lote { width: 100%; border: 1.5px solid var(--borda); border-radius: 14px; padding: 14px; font-size: 14.5px; font-family: inherit; min-height: 110px; resize: vertical; background: var(--bg); margin-top: 4px; }
+  .lista-label { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--texto); margin-bottom: 8px; }
+  .lista-label svg { width: 16px; height: 16px; color: var(--laranja-escuro); flex-shrink: 0; }
+  textarea.lote { width: 100%; border: 1.5px solid var(--borda); border-radius: 14px; padding: 14px; font-size: 14.5px; font-family: inherit; min-height: 130px; resize: vertical; background: var(--bg); }
   textarea.lote:focus { outline: none; border-color: var(--laranja); background: #fff; }
+  .dica-lista { font-size: 12px; color: var(--texto-suave); margin: 8px 0 4px; line-height: 1.5; }
   .btn-adicionar-lote { margin-top: 10px; }
 
   .carregando { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 18px 0; color: var(--texto-suave); font-size: 13.5px; }
@@ -159,7 +173,7 @@
 <div id="app">
 
   <header>
-    <div class="marca">🎯 Ajusta Aí</div>
+    <div class="marca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>Ajusta Aí</div>
     <div class="subtitulo" id="subtituloHeader">Shopee Motoristas · pacotes fora de rota</div>
   </header>
   <div class="progresso" id="barraProgresso">
@@ -208,7 +222,14 @@
       <button class="link-alternativo" id="btnAlternarModo" onclick="alternarModo('lista')">Não consegue usar a câmera? Digite os códigos</button>
 
       <div id="painelLista" style="display:none">
-        <textarea class="lote" id="textoLote" placeholder="Cole ou digite os códigos, um por linha ou separados por espaço/vírgula. Ex: BR2651131746580"></textarea>
+        <div class="lista-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+          Digite ou cole os códigos
+        </div>
+        <textarea class="lote" id="textoLote" placeholder="BR2651131746580
+BR2651131746581
+BR2651131746582"></textarea>
+        <p class="dica-lista">Um código por linha (ou separados por espaço/vírgula). A gente confere e ignora o que não for válido.</p>
         <button class="btn btn-secundario btn-adicionar-lote" onclick="adicionarLote()">Adicionar códigos</button>
         <button class="link-alternativo" onclick="alternarModo('camera')">Voltar pra câmera</button>
       </div>
