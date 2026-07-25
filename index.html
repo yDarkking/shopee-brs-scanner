@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Shopee - BRs Fora de Rota</title>
+<title>Ajusta Aí - Shopee</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -12,8 +12,8 @@
   :root {
     --laranja: #EE4D2D; --laranja-2: #FF6A3D; --laranja-escuro: #C73A1E;
     --laranja-claro: #FFF1EC; --laranja-claro-2: #FFE0D4;
-    --bg: #F4F4F5; --texto: #18181B; --texto-suave: #71717A; --borda: #ECECEF;
-    --verde: #16A34A; --vermelho: #DC2626; --amarelo: #D97706;
+    --bg: #F6F5F3; --texto: #18181B; --texto-suave: #71717A; --borda: #E8E6E1;
+    --verde: #1FAA59; --verde-claro: #E7F7EE; --vermelho: #DC2626; --amarelo: #D97706;
     --sombra: 0 2px 10px rgba(24,24,27,.05); --sombra-lg: 0 10px 26px rgba(238,77,45,.22);
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -27,24 +27,23 @@
 
   header {
     background: linear-gradient(120deg, var(--laranja-2), var(--laranja) 50%, var(--laranja-escuro));
-    color: #fff; padding: 20px 22px 16px; position: sticky; top: 0; z-index: 10;
+    color: #fff; padding: 18px 22px 14px; position: sticky; top: 0; z-index: 10;
     box-shadow: 0 6px 22px rgba(199,58,30,.28);
   }
-  header .marca { font-size: 20px; font-weight: 900; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
-  header .marca svg { width: 20px; height: 20px; }
-  header .subtitulo { font-size: 13px; opacity: .95; margin-top: 3px; font-weight: 500; }
+  header .marca { font-size: 19px; font-weight: 900; letter-spacing: -.3px; display: flex; align-items: center; gap: 7px; }
+  header .subtitulo { font-size: 12.5px; opacity: .92; margin-top: 3px; font-weight: 500; }
 
-  .progresso { display: flex; gap: 6px; padding: 14px 22px 15px; }
-  .progresso i { flex: 1; height: 5px; border-radius: 4px; background: rgba(255,255,255,.32); transition: background .4s; }
+  .progresso { display: flex; gap: 6px; padding: 12px 22px 14px; }
+  .progresso i { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.32); transition: background .4s; }
   .progresso i.feita { background: #fff; }
 
-  main { flex: 1; padding: 26px 22px 108px; }
+  main { flex: 1; padding: 24px 20px 108px; }
   .step { display: none; }
   .step.ativo { display: block; animation: entra .35s cubic-bezier(.16,1,.3,1); }
   @keyframes entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  h1 { font-size: 21px; margin: 0 0 6px; line-height: 1.28; font-weight: 800; }
-  p.desc { color: var(--texto-suave); font-size: 14px; margin: 0 0 20px; line-height: 1.5; }
+  h1 { font-size: 22px; margin: 0 0 8px; line-height: 1.25; font-weight: 800; }
+  p.desc { color: var(--texto-suave); font-size: 14.5px; margin: 0 0 22px; line-height: 1.55; }
 
   .btn {
     width: 100%; border: none; border-radius: 14px; padding: 16px 18px; font-size: 16px; font-weight: 700;
@@ -54,56 +53,89 @@
   .btn-primario { background: linear-gradient(135deg, var(--laranja-2), var(--laranja)); color: #fff; box-shadow: var(--sombra-lg); }
   .btn-primario:active { transform: scale(.96); }
   .btn-primario:disabled { background: #F7C9BA; box-shadow: none; }
+  .btn-secundario { background: var(--bg); color: var(--laranja-escuro); border: 1.5px solid var(--laranja-claro-2); }
 
   .campo-busca { width: 100%; padding: 15px 16px; border-radius: 14px; border: 1.5px solid var(--borda); font-size: 16px; background: var(--bg); }
   .campo-busca:focus { outline: none; border-color: var(--laranja); background: #fff; }
   .lista-resultados { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
-  .resultado { display: flex; align-items: center; gap: 12px; background: #fff; border: 1.5px solid var(--borda); border-radius: 13px; padding: 11px 13px; cursor: pointer; width: 100%; font-family: inherit; text-align: left; }
+  .resultado { display: flex; align-items: center; gap: 12px; background: #fff; border: 1.5px solid var(--borda); border-radius: 13px; padding: 12px 13px; cursor: pointer; width: 100%; font-family: inherit; text-align: left; min-height: 54px; }
   .resultado:active { border-color: var(--laranja); background: var(--laranja-claro); }
   .resultado .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--laranja-claro); color: var(--laranja-escuro); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
   .resultado b { display: block; font-size: 14.5px; }
   .resultado span { font-size: 12px; color: var(--texto-suave); }
   .aviso { font-size: 13px; color: var(--texto-suave); text-align: center; margin-top: 14px; }
 
-  .chip-driver { display: flex; align-items: center; gap: 12px; background: var(--laranja-claro); border: 1.5px solid var(--laranja-claro-2); border-radius: 14px; padding: 13px 15px; margin-bottom: 18px; }
-  .chip-driver .avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--laranja-escuro); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
-  .chip-driver b { display: block; font-size: 14.5px; }
-  .chip-driver span { font-size: 12px; color: var(--texto-suave); }
+  /* -------- passo 2: tira compacta do motorista -------- */
+  .driver-strip {
+    display: flex; align-items: center; gap: 10px; background: var(--bg);
+    border-radius: 14px; padding: 9px 10px; margin-bottom: 14px;
+  }
+  .driver-strip .avatar-mini { width: 32px; height: 32px; border-radius: 50%; background: var(--laranja-claro); color: var(--laranja-escuro); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .driver-strip-info { flex: 1; min-width: 0; }
+  .driver-strip-info b { display: block; font-size: 13.5px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .driver-strip-info span { font-size: 11.5px; color: var(--texto-suave); }
+  .btn-info {
+    width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--laranja-claro-2); background: #fff;
+    color: var(--laranja-escuro); font-weight: 800; font-size: 12.5px; font-style: italic; font-family: Georgia, serif;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .dica-motivo {
+    display: none; background: var(--laranja-claro); border: 1.5px solid var(--laranja-claro-2); border-radius: 13px;
+    padding: 12px 14px; font-size: 12.5px; line-height: 1.55; color: #7A3A24; margin: -6px 0 14px;
+  }
+  .dica-motivo.aberta { display: block; }
 
-  .aviso-baixa { display: flex; gap: 10px; background: #FFF8E6; border: 1.5px solid #FDE9B8; border-radius: 14px; padding: 13px 14px; margin-bottom: 18px; }
-  .aviso-baixa .emoji { font-size: 18px; flex-shrink: 0; }
-  .aviso-baixa p { margin: 0; font-size: 12.5px; line-height: 1.5; color: #7A5B0A; }
+  /* -------- passo 2: palco da câmera -------- */
+  .camera-stage { position: relative; border-radius: 18px; overflow: hidden; background: #111; }
+  #leitor { min-height: 280px; }
+  .camera-stage::after {
+    content: ''; position: absolute; inset: 0; border-radius: 18px; border: 0 solid var(--verde);
+    pointer-events: none; opacity: 0;
+  }
+  .camera-stage.sucesso::after { animation: pulso-sucesso .55s ease-out; }
+  @keyframes pulso-sucesso { 0% { border-width: 6px; opacity: 1; } 100% { border-width: 0; opacity: 0; } }
 
-  .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: var(--bg); border-radius: 12px; padding: 4px; }
-  .tab { flex: 1; border: none; background: transparent; padding: 10px; border-radius: 9px; font-size: 13.5px; font-weight: 700; color: var(--texto-suave); cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .tab.ativa { background: #fff; color: var(--laranja-escuro); box-shadow: var(--sombra); }
-  .tab svg { width: 15px; height: 15px; }
+  .contador-flutuante {
+    position: absolute; top: 12px; right: 12px; background: rgba(17,17,17,.72); backdrop-filter: blur(4px);
+    color: #fff; padding: 7px 13px 7px 10px; border-radius: 20px; font-size: 13px; font-weight: 800;
+    display: flex; align-items: center; gap: 7px; letter-spacing: .2px;
+  }
+  .contador-flutuante .ponto { width: 7px; height: 7px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 0 3px rgba(31,170,89,.25); }
 
-  #leitor { border-radius: 14px; overflow: hidden; background: #111; min-height: 240px; }
-  .dica-camera { font-size: 12px; color: var(--texto-suave); text-align: center; margin-top: 10px; }
+  .dica-camera { font-size: 12px; color: var(--texto-suave); text-align: center; margin: 10px 0 4px; }
 
-  textarea.lote { width: 100%; border: 1.5px solid var(--borda); border-radius: 14px; padding: 14px; font-size: 14.5px; font-family: inherit; min-height: 110px; resize: vertical; background: var(--bg); }
+  .link-alternativo {
+    display: block; width: 100%; text-align: center; background: none; border: none; cursor: pointer;
+    color: var(--laranja-escuro); font-weight: 700; font-size: 13px; font-family: inherit; padding: 10px; margin-top: 4px;
+  }
+
+  textarea.lote { width: 100%; border: 1.5px solid var(--borda); border-radius: 14px; padding: 14px; font-size: 14.5px; font-family: inherit; min-height: 110px; resize: vertical; background: var(--bg); margin-top: 4px; }
   textarea.lote:focus { outline: none; border-color: var(--laranja); background: #fff; }
   .btn-adicionar-lote { margin-top: 10px; }
 
   .carregando { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 18px 0; color: var(--texto-suave); font-size: 13.5px; }
   .spinner-laranja { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--laranja-claro-2); border-top-color: var(--laranja); border-radius: 50%; animation: girar .7s linear infinite; }
 
-  .lista-titulo { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 10px; }
-  .lista-titulo span { font-size: 13.5px; font-weight: 700; }
-  .lista-titulo .contador { background: var(--laranja); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 9px; border-radius: 20px; }
+  .lista-titulo { font-size: 12.5px; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: .4px; margin: 22px 0 8px; }
   .lista-brs { display: flex; flex-direction: column; gap: 7px; max-height: 260px; overflow-y: auto; }
   .item-br { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border-radius: 11px; padding: 10px 12px; }
+  .item-br.novo { animation: entra-item .5s ease-out; }
+  @keyframes entra-item { from { opacity: 0; transform: translateX(-10px); background: var(--verde-claro); } to { opacity: 1; transform: translateX(0); background: var(--bg); } }
   .item-br .codigo { font-size: 13.5px; font-weight: 700; font-family: 'SFMono-Regular', Consolas, monospace; }
   .item-br .remover { border: none; background: none; color: var(--texto-suave); font-size: 15px; cursor: pointer; padding: 2px 6px; }
-  .lista-vazia { text-align: center; padding: 24px 10px; color: var(--texto-suave); font-size: 13px; }
+  .lista-vazia { text-align: center; padding: 22px 10px; color: var(--texto-suave); font-size: 13px; }
 
   .rodape-fixo { position: sticky; bottom: 0; padding: 14px 22px calc(14px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -6px 18px rgba(24,24,27,.05); }
 
-  .tela-final { text-align: center; padding-top: 40px; }
+  .tela-final { text-align: center; padding-top: 32px; }
   .tela-final .check { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, var(--laranja-2), var(--laranja)); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 22px; box-shadow: var(--sombra-lg); }
   .tela-final .check svg { width: 38px; height: 38px; }
   .tela-final h1 { font-size: 22px; }
+  .tela-final p.desc { margin-bottom: 8px; }
+  .contador-pessoal {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--laranja-claro); border: 1.5px solid var(--laranja-claro-2);
+    border-radius: 30px; padding: 9px 18px; margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--laranja-escuro);
+  }
 
   .toast {
     position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(10px); opacity: 0; pointer-events: none;
@@ -117,14 +149,18 @@
 
   .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.5); border-top-color: #fff; border-radius: 50%; animation: girar .7s linear infinite; }
   @keyframes girar { to { transform: rotate(360deg); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step.ativo, .item-br.novo, .camera-stage.sucesso::after { animation: none; }
+  }
 </style>
 </head>
 <body>
 <div id="app">
 
   <header>
-    <div class="marca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>Shopee</div>
-    <div class="subtitulo" id="subtituloHeader">BRs fora de rota</div>
+    <div class="marca">🎯 Ajusta Aí</div>
+    <div class="subtitulo" id="subtituloHeader">Shopee Motoristas · pacotes fora de rota</div>
   </header>
   <div class="progresso" id="barraProgresso">
     <i data-passo="1"></i><i data-passo="2"></i>
@@ -133,9 +169,9 @@
   <main>
     <!-- STEP 0 -->
     <section class="step ativo" id="step-0">
-      <h1>Pacote fora de rota? 📦</h1>
-      <p class="desc">Se a etiqueta do pacote tem um endereço diferente do que está no sistema, bipe o código aqui. Isso ajuda a gente a corrigir o cadastro.</p>
-      <button class="btn btn-primario" onclick="irPara(1)">Começar</button>
+      <h1>Rota mais redonda começa com você 🎯</h1>
+      <p class="desc">Cada pacote fora de rota que você bipa aqui é um pedaço a menos de rota espalhada amanhã. A gente ajusta o cadastro, você ganha entregas mais próximas umas das outras.</p>
+      <button class="btn btn-primario" onclick="irPara(1)">Bora ajustar</button>
     </section>
 
     <!-- STEP 1: identificar motorista -->
@@ -150,41 +186,34 @@
 
     <!-- STEP 2: coleta -->
     <section class="step" id="step-2">
-      <div class="chip-driver">
-        <div class="avatar" id="avatarDriver">?</div>
-        <div><b id="nomeDriverColeta">-</b><span id="stationDriverColeta">-</span></div>
+      <div class="driver-strip">
+        <div class="avatar-mini" id="avatarDriver">?</div>
+        <div class="driver-strip-info">
+          <b id="nomeDriverColeta">-</b>
+          <span id="stationDriverColeta">-</span>
+        </div>
+        <button class="btn-info" onclick="alternarDica()" aria-label="Por que bipar">i</button>
       </div>
 
-      <div class="aviso-baixa">
-        <span class="emoji">💡</span>
-        <p>Se você finalizar a entrega no endereço certo (dar baixa no local correto), a gente consegue ajustar o cadastro. Bipe aqui os pacotes que vieram com endereço errado na etiqueta.</p>
+      <div class="dica-motivo" id="dicaMotivo">
+        💡 Se você finalizar a entrega no endereço certo (dar baixa no local certo), a gente ajusta o cadastro dessa região. Quanto mais gente bipa, mais rápido as rotas ficam agrupadas de verdade.
       </div>
 
-      <div class="tabs">
-        <button class="tab ativa" id="tabCamera" onclick="alternarModo('camera')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-          Câmera
-        </button>
-        <button class="tab" id="tabLista" onclick="alternarModo('lista')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-          Digitar/colar
-        </button>
-      </div>
-
-      <div id="painelCamera">
+      <div class="camera-stage" id="cameraStage">
         <div id="leitor"></div>
-        <p class="dica-camera">Aponte a câmera pro código de barras ou QR da etiqueta. Bipa sozinho.</p>
+        <div class="contador-flutuante"><span class="ponto"></span><span id="contadorBrs">0</span> bipado<span id="pluralBrs">s</span></div>
       </div>
+      <p class="dica-camera">Aponte pro código de barras ou QR da etiqueta. Bipa sozinho.</p>
+
+      <button class="link-alternativo" id="btnAlternarModo" onclick="alternarModo('lista')">Não consegue usar a câmera? Digite os códigos</button>
 
       <div id="painelLista" style="display:none">
         <textarea class="lote" id="textoLote" placeholder="Cole ou digite os códigos, um por linha ou separados por espaço/vírgula. Ex: BR2651131746580"></textarea>
-        <button class="btn btn-primario btn-adicionar-lote" onclick="adicionarLote()">Adicionar códigos</button>
+        <button class="btn btn-secundario btn-adicionar-lote" onclick="adicionarLote()">Adicionar códigos</button>
+        <button class="link-alternativo" onclick="alternarModo('camera')">Voltar pra câmera</button>
       </div>
 
-      <div class="lista-titulo">
-        <span>Pacotes bipados</span>
-        <span class="contador" id="contadorBrs">0</span>
-      </div>
+      <div class="lista-titulo">Pacotes bipados</div>
       <div class="lista-brs" id="listaBrs">
         <div class="lista-vazia">Nenhum código bipado ainda.</div>
       </div>
@@ -193,9 +222,11 @@
     <!-- STEP FINAL -->
     <section class="step tela-final" id="step-final">
       <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <h1>Enviado! 🙌</h1>
+      <h1>Ajustado! 🙌</h1>
       <p class="desc" id="descFinal">Seus pacotes foram registrados.</p>
-      <button class="btn btn-primario" onclick="recomecar()">Bipar mais pacotes</button>
+      <p class="desc">Isso ajuda a deixar sua próxima rota mais enxuta. Sempre que aparecer um pacote fora de rota, é só bipar aqui.</p>
+      <div class="contador-pessoal" id="contadorPessoal" style="display:none">🏆 <span id="totalPessoal">0</span> pacotes ajustados por você</div>
+      <button class="btn btn-primario" style="margin-top:22px" onclick="recomecar()">Bipar mais pacotes</button>
     </section>
   </main>
 
@@ -211,6 +242,7 @@
   // planilha via service account. Essa página nunca tem acesso direto à planilha nem
   // credenciais - só chama essa API pública com CORS liberado.
   var API_URL = 'https://brs-sheets-api.fluxodriverlba29-brs.workers.dev/';
+  var CHAVE_CONTADOR_PESSOAL = 'ajustaai_total_bipados';
 
   var PADRAO_BR = /^BR[A-Z0-9]{8,20}$/;
 
@@ -256,6 +288,10 @@
     document.getElementById('rodapeEnvio').style.display = (passo === 2) ? 'block' : 'none';
     if (passo !== 2) pararCamera();
     window.scrollTo(0, 0);
+    if (passo === 1) {
+      var campo = document.getElementById('inputBusca');
+      setTimeout(function () { campo.focus(); }, 50);
+    }
   }
 
   // ------- Passo 1: busca -------
@@ -310,19 +346,30 @@
     document.getElementById('avatarDriver').textContent = inicial;
     document.getElementById('nomeDriverColeta').textContent = info.nome;
     document.getElementById('stationDriverColeta').textContent = estado.stationNome || 'Estação não identificada';
-    document.getElementById('subtituloHeader').textContent = 'Oi, ' + info.nome.split(' ')[0] + '!';
+    document.getElementById('subtituloHeader').textContent = 'Oi, ' + info.nome.split(' ')[0] + '! Bora ajustar sua rota.';
 
     irPara(2);
     alternarModo('camera');
   }
 
   // ------- Passo 2: coleta -------
+  function alternarDica() {
+    document.getElementById('dicaMotivo').classList.toggle('aberta');
+  }
+
   function alternarModo(modo) {
-    document.getElementById('tabCamera').classList.toggle('ativa', modo === 'camera');
-    document.getElementById('tabLista').classList.toggle('ativa', modo === 'lista');
-    document.getElementById('painelCamera').style.display = modo === 'camera' ? 'block' : 'none';
-    document.getElementById('painelLista').style.display = modo === 'lista' ? 'block' : 'none';
-    if (modo === 'camera') iniciarCamera(); else pararCamera();
+    var painelLista = document.getElementById('painelLista');
+    var cameraStage = document.getElementById('cameraStage');
+    var dicaCamera = document.querySelector('.dica-camera');
+    var btnAlternar = document.getElementById('btnAlternarModo');
+
+    var mostraCamera = modo === 'camera';
+    cameraStage.style.display = mostraCamera ? 'block' : 'none';
+    dicaCamera.style.display = mostraCamera ? 'block' : 'none';
+    btnAlternar.style.display = mostraCamera ? 'block' : 'none';
+    painelLista.style.display = mostraCamera ? 'none' : 'block';
+
+    if (mostraCamera) iniciarCamera(); else pararCamera();
   }
 
   function iniciarCamera() {
@@ -353,6 +400,16 @@
     processarCodigo(codigo);
   }
 
+  // ponytail: o "pulso" verde na câmera + a animação do item novo na lista partem do
+  // mesmo instante (scan bem-sucedido) de propósito - o olho acompanha o movimento
+  // câmera -> lista sem precisar procurar onde olhar.
+  function piscarCamera() {
+    var el = document.getElementById('cameraStage');
+    el.classList.remove('sucesso');
+    void el.offsetWidth;
+    el.classList.add('sucesso');
+  }
+
   function processarCodigo(codigo) {
     if (!PADRAO_BR.test(codigo)) {
       beep(false);
@@ -367,7 +424,8 @@
     COLETADOS_SET[codigo] = true;
     COLETADOS.unshift(codigo);
     beep(true);
-    renderizarLista();
+    if (CAMERA_ATIVA) piscarCamera();
+    renderizarLista(true);
     return true;
   }
 
@@ -387,12 +445,13 @@
   function removerBr(codigo) {
     delete COLETADOS_SET[codigo];
     COLETADOS = COLETADOS.filter(function (c) { return c !== codigo; });
-    renderizarLista();
+    renderizarLista(false);
   }
 
-  function renderizarLista() {
+  function renderizarLista(destacarNovo) {
     var lista = document.getElementById('listaBrs');
     document.getElementById('contadorBrs').textContent = COLETADOS.length;
+    document.getElementById('pluralBrs').textContent = COLETADOS.length === 1 ? '' : 's';
     var btn = document.getElementById('btnEnviar');
     btn.disabled = COLETADOS.length === 0;
     btn.textContent = 'Enviar ' + COLETADOS.length + ' pacote' + (COLETADOS.length === 1 ? '' : 's');
@@ -405,6 +464,9 @@
       return '<div class="item-br"><span class="codigo">' + codigo + '</span>' +
         '<button class="remover" onclick="removerBr(\'' + codigo + '\')">✕</button></div>';
     }).join('');
+    if (destacarNovo && lista.firstElementChild) {
+      lista.firstElementChild.classList.add('novo');
+    }
   }
 
   function beep(sucesso) {
@@ -429,6 +491,13 @@
     toastTimer = setTimeout(function () { el.classList.remove('mostrar'); }, 1800);
   }
 
+  // ------- Contador pessoal (fica salvo só neste aparelho) -------
+  function registrarContadorPessoal(qtd) {
+    var total = parseInt(localStorage.getItem(CHAVE_CONTADOR_PESSOAL) || '0', 10) + qtd;
+    try { localStorage.setItem(CHAVE_CONTADOR_PESSOAL, total); } catch (e) {}
+    return total;
+  }
+
   // ------- Envio -------
   function enviarBrsAoServidor() {
     if (!COLETADOS.length) return;
@@ -448,11 +517,16 @@
       .then(function (r) { return r.json(); })
       .then(function (resp) {
         document.getElementById('descFinal').textContent = resp.gravados + ' pacote' + (resp.gravados === 1 ? '' : 's') + ' registrado' + (resp.gravados === 1 ? '' : 's') + ' com sucesso.';
+        var total = registrarContadorPessoal(resp.gravados);
+        if (total > 0) {
+          document.getElementById('totalPessoal').textContent = total;
+          document.getElementById('contadorPessoal').style.display = 'inline-flex';
+        }
         irPara('final');
       })
       .catch(function () {
         btn.disabled = false;
-        renderizarLista();
+        renderizarLista(false);
         mostrarToast('Não deu pra enviar agora. Tenta de novo.', 'erro');
       });
   }
@@ -460,7 +534,7 @@
   function recomecar() {
     COLETADOS = [];
     COLETADOS_SET = {};
-    renderizarLista();
+    renderizarLista(false);
     irPara(2);
     alternarModo('camera');
   }
