@@ -96,6 +96,13 @@
   }
   .dica-motivo.aberta { display: block; }
 
+  .aviso-condicao {
+    display: flex; gap: 10px; background: var(--laranja-claro); border: 1.5px solid var(--laranja-claro-2);
+    border-radius: 14px; padding: 13px 14px; margin: 4px 0 20px;
+  }
+  .aviso-condicao .emoji { font-size: 17px; flex-shrink: 0; line-height: 1.5; }
+  .aviso-condicao p { margin: 0; font-size: 13px; line-height: 1.55; color: #7A3A24; }
+
   /* -------- passo 2: palco da câmera -------- */
   .camera-stage { position: relative; border-radius: 18px; overflow: hidden; background: #111; }
   #leitor { min-height: 280px; }
@@ -185,6 +192,10 @@
     <section class="step ativo" id="step-0">
       <h1>Rota mais redonda começa com você 🎯</h1>
       <p class="desc">Cada pacote fora de rota que você bipa aqui é um pedaço a menos de rota espalhada amanhã. A gente ajusta o cadastro, você ganha entregas mais próximas umas das outras.</p>
+      <div class="aviso-condicao">
+        <span class="emoji">⚠️</span>
+        <p><b>O cadastro só é corrigido se você finalizar a entrega no endereço certo</b> (dar baixa no local correto). Bipar aqui não substitui a baixa, é só o que avisa a gente do endereço errado.</p>
+      </div>
       <button class="btn btn-primario" onclick="irPara(1)">Bora ajustar</button>
     </section>
 
