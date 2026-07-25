@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Shopee - BRs Fora de Rota</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+  :root {
+    --laranja: #EE4D2D; --laranja-2: #FF6A3D; --laranja-escuro: #C73A1E;
+    --laranja-claro: #FFF1EC; --laranja-claro-2: #FFE0D4;
+    --bg: #F4F4F5; --texto: #18181B; --texto-suave: #71717A; --borda: #ECECEF;
+    --verde: #16A34A; --vermelho: #DC2626; --amarelo: #D97706;
+    --sombra: 0 2px 10px rgba(24,24,27,.05); --sombra-lg: 0 10px 26px rgba(238,77,45,.22);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--texto); font-size: 16px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; display: flex; flex-direction: column; position: relative; }
+  @media (min-width: 521px) { body { padding: 24px 0; } #app { min-height: auto; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.12); } }
+
+  header {
+    background: linear-gradient(120deg, var(--laranja-2), var(--laranja) 50%, var(--laranja-escuro));
+    color: #fff; padding: 20px 22px 16px; position: sticky; top: 0; z-index: 10;
+    box-shadow: 0 6px 22px rgba(199,58,30,.28);
+  }
+  header .marca { font-size: 20px; font-weight: 900; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
+  header .marca svg { width: 20px; height: 20px; }
+  header .subtitulo { font-size: 13px; opacity: .95; margin-top: 3px; font-weight: 500; }
+
+  .progresso { display: flex; gap: 6px; padding: 14px 22px 15px; }
+  .progresso i { flex: 1; height: 5px; border-radius: 4px; background: rgba(255,255,255,.32); transition: background .4s; }
+  .progresso i.feita { background: #fff; }
+
+  main { flex: 1; padding: 26px 22px 108px; }
+  .step { display: none; }
+  .step.ativo { display: block; animation: entra .35s cubic-bezier(.16,1,.3,1); }
+  @keyframes entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  h1 { font-size: 21px; margin: 0 0 6px; line-height: 1.28; font-weight: 800; }
+  p.desc { color: var(--texto-suave); font-size: 14px; margin: 0 0 20px; line-height: 1.5; }
+
+  .btn {
+    width: 100%; border: none; border-radius: 14px; padding: 16px 18px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 54px; transition: transform .15s, opacity .15s;
+  }
+  .btn-primario { background: linear-gradient(135deg, var(--laranja-2), var(--laranja)); color: #fff; box-shadow: var(--sombra-lg); }
+  .btn-primario:active { transform: scale(.96); }
+  .btn-primario:disabled { background: #F7C9BA; box-shadow: none; }
+
+  .campo-busca { width: 100%; padding: 15px 16px; border-radius: 14px; border: 1.5px solid var(--borda); font-size: 16px; background: var(--bg); }
+  .campo-busca:focus { outline: none; border-color: var(--laranja); background: #fff; }
+  .lista-resultados { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .resultado { display: flex; align-items: center; gap: 12px; background: #fff; border: 1.5px solid var(--borda); border-radius: 13px; padding: 11px 13px; cursor: pointer; width: 100%; font-family: inherit; text-align: left; }
+  .resultado:active { border-color: var(--laranja); background: var(--laranja-claro); }
+  .resultado .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--laranja-claro); color: var(--laranja-escuro); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+  .resultado b { display: block; font-size: 14.5px; }
+  .resultado span { font-size: 12px; color: var(--texto-suave); }
+  .aviso { font-size: 13px; color: var(--texto-suave); text-align: center; margin-top: 14px; }
+
+  .chip-driver { display: flex; align-items: center; gap: 12px; background: var(--laranja-claro); border: 1.5px solid var(--laranja-claro-2); border-radius: 14px; padding: 13px 15px; margin-bottom: 18px; }
+  .chip-driver .avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--laranja-escuro); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
+  .chip-driver b { display: block; font-size: 14.5px; }
+  .chip-driver span { font-size: 12px; color: var(--texto-suave); }
+
+  .aviso-baixa { display: flex; gap: 10px; background: #FFF8E6; border: 1.5px solid #FDE9B8; border-radius: 14px; padding: 13px 14px; margin-bottom: 18px; }
+  .aviso-baixa .emoji { font-size: 18px; flex-shrink: 0; }
+  .aviso-baixa p { margin: 0; font-size: 12.5px; line-height: 1.5; color: #7A5B0A; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: var(--bg); border-radius: 12px; padding: 4px; }
+  .tab { flex: 1; border: none; background: transparent; padding: 10px; border-radius: 9px; font-size: 13.5px; font-weight: 700; color: var(--texto-suave); cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .tab.ativa { background: #fff; color: var(--laranja-escuro); box-shadow: var(--sombra); }
+  .tab svg { width: 15px; height: 15px; }
+
+  #leitor { border-radius: 14px; overflow: hidden; background: #111; min-height: 240px; }
+  .dica-camera { font-size: 12px; color: var(--texto-suave); text-align: center; margin-top: 10px; }
+
+  textarea.lote { width: 100%; border: 1.5px solid var(--borda); border-radius: 14px; padding: 14px; font-size: 14.5px; font-family: inherit; min-height: 110px; resize: vertical; background: var(--bg); }
+  textarea.lote:focus { outline: none; border-color: var(--laranja); background: #fff; }
+  .btn-adicionar-lote { margin-top: 10px; }
+
+  .carregando { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 18px 0; color: var(--texto-suave); font-size: 13.5px; }
+  .spinner-laranja { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--laranja-claro-2); border-top-color: var(--laranja); border-radius: 50%; animation: girar .7s linear infinite; }
+
+  .lista-titulo { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 10px; }
+  .lista-titulo span { font-size: 13.5px; font-weight: 700; }
+  .lista-titulo .contador { background: var(--laranja); color: #fff; font-size: 12px; font-weight: 800; padding: 2px 9px; border-radius: 20px; }
+  .lista-brs { display: flex; flex-direction: column; gap: 7px; max-height: 260px; overflow-y: auto; }
+  .item-br { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border-radius: 11px; padding: 10px 12px; }
+  .item-br .codigo { font-size: 13.5px; font-weight: 700; font-family: 'SFMono-Regular', Consolas, monospace; }
+  .item-br .remover { border: none; background: none; color: var(--texto-suave); font-size: 15px; cursor: pointer; padding: 2px 6px; }
+  .lista-vazia { text-align: center; padding: 24px 10px; color: var(--texto-suave); font-size: 13px; }
+
+  .rodape-fixo { position: sticky; bottom: 0; padding: 14px 22px calc(14px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -6px 18px rgba(24,24,27,.05); }
+
+  .tela-final { text-align: center; padding-top: 40px; }
+  .tela-final .check { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, var(--laranja-2), var(--laranja)); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 22px; box-shadow: var(--sombra-lg); }
+  .tela-final .check svg { width: 38px; height: 38px; }
+  .tela-final h1 { font-size: 22px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%) translateY(10px); opacity: 0; pointer-events: none;
+    background: #18181B; color: #fff; padding: 11px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 600;
+    transition: opacity .2s, transform .2s; z-index: 60; max-width: 88%; text-align: center; box-shadow: 0 10px 26px rgba(0,0,0,.25);
+  }
+  .toast.mostrar { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.sucesso { background: var(--verde); }
+  .toast.erro { background: var(--vermelho); }
+  .toast.aviso { background: var(--amarelo); }
+
+  .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.5); border-top-color: #fff; border-radius: 50%; animation: girar .7s linear infinite; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="marca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>Shopee</div>
+    <div class="subtitulo" id="subtituloHeader">BRs fora de rota</div>
+  </header>
+  <div class="progresso" id="barraProgresso">
+    <i data-passo="1"></i><i data-passo="2"></i>
+  </div>
+
+  <main>
+    <!-- STEP 0 -->
+    <section class="step ativo" id="step-0">
+      <h1>Pacote fora de rota? 📦</h1>
+      <p class="desc">Se a etiqueta do pacote tem um endereço diferente do que está no sistema, bipe o código aqui. Isso ajuda a gente a corrigir o cadastro.</p>
+      <button class="btn btn-primario" onclick="irPara(1)">Começar</button>
+    </section>
+
+    <!-- STEP 1: identificar motorista -->
+    <section class="step" id="step-1">
+      <h1>Quem é você?</h1>
+      <p class="desc">Digite seu nome ou seu ID de motorista.</p>
+      <input class="campo-busca" id="inputBusca" type="text" placeholder="Nome ou ID" autocomplete="off" oninput="onDigitarBusca()">
+      <div class="carregando" id="carregandoMotoristas" style="display:none"><span class="spinner-laranja"></span> Carregando motoristas...</div>
+      <div class="lista-resultados" id="listaResultados"></div>
+      <div class="aviso" id="avisoBusca" style="display:none">Nenhum motorista encontrado.</div>
+    </section>
+
+    <!-- STEP 2: coleta -->
+    <section class="step" id="step-2">
+      <div class="chip-driver">
+        <div class="avatar" id="avatarDriver">?</div>
+        <div><b id="nomeDriverColeta">-</b><span id="stationDriverColeta">-</span></div>
+      </div>
+
+      <div class="aviso-baixa">
+        <span class="emoji">💡</span>
+        <p>Se você finalizar a entrega no endereço certo (dar baixa no local correto), a gente consegue ajustar o cadastro. Bipe aqui os pacotes que vieram com endereço errado na etiqueta.</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab ativa" id="tabCamera" onclick="alternarModo('camera')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          Câmera
+        </button>
+        <button class="tab" id="tabLista" onclick="alternarModo('lista')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Digitar/colar
+        </button>
+      </div>
+
+      <div id="painelCamera">
+        <div id="leitor"></div>
+        <p class="dica-camera">Aponte a câmera pro código de barras ou QR da etiqueta. Bipa sozinho.</p>
+      </div>
+
+      <div id="painelLista" style="display:none">
+        <textarea class="lote" id="textoLote" placeholder="Cole ou digite os códigos, um por linha ou separados por espaço/vírgula. Ex: BR2651131746580"></textarea>
+        <button class="btn btn-primario btn-adicionar-lote" onclick="adicionarLote()">Adicionar códigos</button>
+      </div>
+
+      <div class="lista-titulo">
+        <span>Pacotes bipados</span>
+        <span class="contador" id="contadorBrs">0</span>
+      </div>
+      <div class="lista-brs" id="listaBrs">
+        <div class="lista-vazia">Nenhum código bipado ainda.</div>
+      </div>
+    </section>
+
+    <!-- STEP FINAL -->
+    <section class="step tela-final" id="step-final">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <h1>Enviado! 🙌</h1>
+      <p class="desc" id="descFinal">Seus pacotes foram registrados.</p>
+      <button class="btn btn-primario" onclick="recomecar()">Bipar mais pacotes</button>
+    </section>
+  </main>
+
+  <div class="rodape-fixo" id="rodapeEnvio" style="display:none">
+    <button class="btn btn-primario" id="btnEnviar" onclick="enviarBrsAoServidor()" disabled>Enviar 0 pacotes</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+  // ponytail: URL do deployment do projeto Apps Script externo (webapp-brs/, conta
+  // fluxodriverlba29@gmail.com) - troque aqui se o projeto for redeployado com outro ID.
+  var API_URL = 'https://script.google.com/macros/s/AKfycbxsvgVEPO_S7d_Ya-p_DdY7MrWiz7Clts-Mi9CmIDrEtpQW5FsA5gR-Qp2IWaPLvOeE7Q/exec';
+
+  var PADRAO_BR = /^BR[A-Z0-9]{8,20}$/;
+
+  var estado = { driverId: '', driverNome: '', stationNome: '' };
+  var COLETADOS = [];
+  var COLETADOS_SET = {};
+  var ultimoLido = { codigo: '', quando: 0 };
+  var SCANNER = null;
+  var CAMERA_ATIVA = false;
+  var AUDIO_CTX = null;
+
+  // ------- Carga de motoristas (mesmo padrão do formulário principal) -------
+  var DADOS = { prontos: false, erro: false, motoristas: [], porId: null, stationsPorId: null };
+
+  function carregarDadosIniciais() {
+    fetch(API_URL + '?action=carregarDados')
+      .then(function (r) { return r.json(); })
+      .then(function (resp) {
+        DADOS.motoristas = resp.motoristas;
+        DADOS.porId = {};
+        resp.motoristas.forEach(function (m) { DADOS.porId[m.id] = m; });
+        DADOS.stationsPorId = {};
+        resp.stations.forEach(function (s) { DADOS.stationsPorId[s.id] = s.nome; });
+        DADOS.prontos = true;
+        document.getElementById('carregandoMotoristas').style.display = 'none';
+        if (document.getElementById('inputBusca').value.trim().length >= 2) onDigitarBusca();
+      })
+      .catch(function () {
+        DADOS.erro = true;
+        document.getElementById('carregandoMotoristas').style.display = 'none';
+        mostrarToast('Não deu pra carregar a lista de motoristas. Recarregue a página.', 'erro');
+      });
+  }
+  carregarDadosIniciais();
+
+  function irPara(passo) {
+    document.querySelectorAll('.step').forEach(function (s) { s.classList.remove('ativo'); });
+    document.getElementById(passo === 'final' ? 'step-final' : 'step-' + passo).classList.add('ativo');
+    document.querySelectorAll('#barraProgresso i').forEach(function (i) {
+      var p = parseInt(i.getAttribute('data-passo'), 10);
+      i.classList.toggle('feita', typeof passo === 'number' && p <= passo);
+    });
+    document.getElementById('rodapeEnvio').style.display = (passo === 2) ? 'block' : 'none';
+    if (passo !== 2) pararCamera();
+    window.scrollTo(0, 0);
+  }
+
+  // ------- Passo 1: busca -------
+  var timerBusca = null;
+  function onDigitarBusca() {
+    clearTimeout(timerBusca);
+    var termo = document.getElementById('inputBusca').value.trim();
+    if (termo.length < 2) {
+      document.getElementById('listaResultados').innerHTML = '';
+      document.getElementById('carregandoMotoristas').style.display = 'none';
+      return;
+    }
+    if (!DADOS.prontos && !DADOS.erro) {
+      document.getElementById('carregandoMotoristas').style.display = 'flex';
+      document.getElementById('listaResultados').innerHTML = '';
+      return;
+    }
+    timerBusca = setTimeout(function () {
+      if (!DADOS.prontos) return;
+      var termoLower = termo.toLowerCase();
+      var resultados = [];
+      for (var i = 0; i < DADOS.motoristas.length && resultados.length < 15; i++) {
+        var m = DADOS.motoristas[i];
+        if (m.nome.toLowerCase().indexOf(termoLower) !== -1 || m.id.toLowerCase().indexOf(termoLower) !== -1) resultados.push(m);
+      }
+      mostrarResultadosBusca(resultados);
+    }, 150);
+  }
+
+  function mostrarResultadosBusca(resultados) {
+    var lista = document.getElementById('listaResultados');
+    lista.innerHTML = '';
+    document.getElementById('avisoBusca').style.display = (resultados.length === 0) ? 'block' : 'none';
+    resultados.forEach(function (r) {
+      var inicial = r.nome.trim().charAt(0).toUpperCase() || '?';
+      var btn = document.createElement('button');
+      btn.className = 'resultado';
+      btn.innerHTML = '<span class="avatar">' + inicial + '</span><span><b>' + r.nome + '</b><span>ID: ' + r.id + '</span></span>';
+      btn.onclick = function () { selecionarMotorista(r.id); };
+      lista.appendChild(btn);
+    });
+  }
+
+  function selecionarMotorista(driverId) {
+    var info = DADOS.porId[driverId];
+    if (!info) return;
+    estado.driverId = info.id;
+    estado.driverNome = info.nome;
+    estado.stationNome = DADOS.stationsPorId[info.stationId] || '';
+
+    var inicial = info.nome.trim().charAt(0).toUpperCase() || '?';
+    document.getElementById('avatarDriver').textContent = inicial;
+    document.getElementById('nomeDriverColeta').textContent = info.nome;
+    document.getElementById('stationDriverColeta').textContent = estado.stationNome || 'Estação não identificada';
+    document.getElementById('subtituloHeader').textContent = 'Oi, ' + info.nome.split(' ')[0] + '!';
+
+    irPara(2);
+    alternarModo('camera');
+  }
+
+  // ------- Passo 2: coleta -------
+  function alternarModo(modo) {
+    document.getElementById('tabCamera').classList.toggle('ativa', modo === 'camera');
+    document.getElementById('tabLista').classList.toggle('ativa', modo === 'lista');
+    document.getElementById('painelCamera').style.display = modo === 'camera' ? 'block' : 'none';
+    document.getElementById('painelLista').style.display = modo === 'lista' ? 'block' : 'none';
+    if (modo === 'camera') iniciarCamera(); else pararCamera();
+  }
+
+  function iniciarCamera() {
+    if (CAMERA_ATIVA || typeof Html5Qrcode === 'undefined') return;
+    SCANNER = new Html5Qrcode('leitor');
+    SCANNER.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 260, height: 150 } },
+      function (textoLido) { aoLerCodigo(textoLido); },
+      function () {}
+    ).then(function () { CAMERA_ATIVA = true; })
+      .catch(function (erro) {
+        // ponytail: mostra o nome do erro (NotAllowedError, NotFoundError, etc) pra dar pista real
+        // do motivo - "permission denied" silencioso quase sempre é permissão já negada antes
+        // nas configurações do navegador/site, não falta de pedido.
+        var motivo = erro && erro.name ? ' (' + erro.name + ')' : '';
+        mostrarToast('Câmera bloqueada' + motivo + '. Use "Digitar/colar" ou libere a câmera nas configurações do navegador.', 'erro');
+        alternarModo('lista');
+      });
+  }
+
+  function pararCamera() {
+    if (!CAMERA_ATIVA || !SCANNER) return;
+    SCANNER.stop().then(function () { SCANNER.clear(); CAMERA_ATIVA = false; }).catch(function () { CAMERA_ATIVA = false; });
+  }
+
+  function aoLerCodigo(textoBruto) {
+    var codigo = (textoBruto || '').trim().toUpperCase();
+    var agora = Date.now();
+    if (codigo === ultimoLido.codigo && (agora - ultimoLido.quando) < 2000) return;
+    ultimoLido = { codigo: codigo, quando: agora };
+    processarCodigo(codigo);
+  }
+
+  function processarCodigo(codigo) {
+    if (!PADRAO_BR.test(codigo)) {
+      beep(false);
+      mostrarToast('Código inválido: ' + codigo, 'erro');
+      return false;
+    }
+    if (COLETADOS_SET[codigo]) {
+      beep(false);
+      mostrarToast('Já bipado: ' + codigo, 'aviso');
+      return false;
+    }
+    COLETADOS_SET[codigo] = true;
+    COLETADOS.unshift(codigo);
+    beep(true);
+    renderizarLista();
+    return true;
+  }
+
+  function adicionarLote() {
+    var texto = document.getElementById('textoLote').value;
+    var partes = texto.split(/[\s,;]+/).map(function (s) { return s.trim().toUpperCase(); }).filter(Boolean);
+    var adicionados = 0, rejeitados = 0;
+    partes.forEach(function (codigo) {
+      if (processarCodigo(codigo)) adicionados++; else rejeitados++;
+    });
+    document.getElementById('textoLote').value = '';
+    if (adicionados || rejeitados) {
+      mostrarToast(adicionados + ' adicionado' + (adicionados === 1 ? '' : 's') + (rejeitados ? ', ' + rejeitados + ' rejeitado' + (rejeitados === 1 ? '' : 's') : ''), adicionados ? 'sucesso' : 'erro');
+    }
+  }
+
+  function removerBr(codigo) {
+    delete COLETADOS_SET[codigo];
+    COLETADOS = COLETADOS.filter(function (c) { return c !== codigo; });
+    renderizarLista();
+  }
+
+  function renderizarLista() {
+    var lista = document.getElementById('listaBrs');
+    document.getElementById('contadorBrs').textContent = COLETADOS.length;
+    var btn = document.getElementById('btnEnviar');
+    btn.disabled = COLETADOS.length === 0;
+    btn.textContent = 'Enviar ' + COLETADOS.length + ' pacote' + (COLETADOS.length === 1 ? '' : 's');
+
+    if (!COLETADOS.length) {
+      lista.innerHTML = '<div class="lista-vazia">Nenhum código bipado ainda.</div>';
+      return;
+    }
+    lista.innerHTML = COLETADOS.map(function (codigo) {
+      return '<div class="item-br"><span class="codigo">' + codigo + '</span>' +
+        '<button class="remover" onclick="removerBr(\'' + codigo + '\')">✕</button></div>';
+    }).join('');
+  }
+
+  function beep(sucesso) {
+    try {
+      AUDIO_CTX = AUDIO_CTX || new (window.AudioContext || window.webkitAudioContext)();
+      var osc = AUDIO_CTX.createOscillator();
+      var gain = AUDIO_CTX.createGain();
+      osc.frequency.value = sucesso ? 880 : 220;
+      osc.connect(gain); gain.connect(AUDIO_CTX.destination);
+      gain.gain.setValueAtTime(.15, AUDIO_CTX.currentTime);
+      osc.start();
+      osc.stop(AUDIO_CTX.currentTime + (sucesso ? .09 : .16));
+    } catch (e) {}
+  }
+
+  var toastTimer;
+  function mostrarToast(msg, tipo) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast mostrar' + (tipo ? ' ' + tipo : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('mostrar'); }, 1800);
+  }
+
+  // ------- Envio -------
+  function enviarBrsAoServidor() {
+    if (!COLETADOS.length) return;
+    var btn = document.getElementById('btnEnviar');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Enviando...';
+    pararCamera();
+
+    // ponytail: content-type text/plain (não application/json) de propósito - evita o
+    // preflight OPTIONS, que o Apps Script não responde direito. O corpo continua JSON,
+    // o servidor faz JSON.parse(e.postData.contents) igual.
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'enviarBrs',
+        payload: { driverId: estado.driverId, driverNome: estado.driverNome, stationNome: estado.stationNome, brs: COLETADOS }
+      })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (resp) {
+        document.getElementById('descFinal').textContent = resp.gravados + ' pacote' + (resp.gravados === 1 ? '' : 's') + ' registrado' + (resp.gravados === 1 ? '' : 's') + ' com sucesso.';
+        irPara('final');
+      })
+      .catch(function () {
+        btn.disabled = false;
+        renderizarLista();
+        mostrarToast('Não deu pra enviar agora. Tenta de novo.', 'erro');
+      });
+  }
+
+  function recomecar() {
+    COLETADOS = [];
+    COLETADOS_SET = {};
+    renderizarLista();
+    irPara(2);
+    alternarModo('camera');
+  }
+</script>
+</body>
+</html>
