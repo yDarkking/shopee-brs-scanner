@@ -490,16 +490,28 @@ BR2651131746582"></textarea>
     }
   }
 
+  function tocarTom(freq, duracao, atraso) {
+    var t0 = AUDIO_CTX.currentTime + atraso;
+    var osc = AUDIO_CTX.createOscillator();
+    var gain = AUDIO_CTX.createGain();
+    osc.frequency.value = freq;
+    osc.connect(gain); gain.connect(AUDIO_CTX.destination);
+    gain.gain.setValueAtTime(.15, t0);
+    osc.start(t0);
+    osc.stop(t0 + duracao);
+  }
+
   function beep(sucesso) {
     try {
       AUDIO_CTX = AUDIO_CTX || new (window.AudioContext || window.webkitAudioContext)();
-      var osc = AUDIO_CTX.createOscillator();
-      var gain = AUDIO_CTX.createGain();
-      osc.frequency.value = sucesso ? 880 : 220;
-      osc.connect(gain); gain.connect(AUDIO_CTX.destination);
-      gain.gain.setValueAtTime(.15, AUDIO_CTX.currentTime);
-      osc.start();
-      osc.stop(AUDIO_CTX.currentTime + (sucesso ? .09 : .16));
+      if (sucesso) {
+        tocarTom(880, .09, 0);
+      } else {
+        // ponytail: bip duplo grave = alerta de negação (código inválido ou repetido),
+        // padrão que remete a leitor de código recusando a leitura
+        tocarTom(220, .1, 0);
+        tocarTom(220, .1, .14);
+      }
     } catch (e) {}
   }
 
