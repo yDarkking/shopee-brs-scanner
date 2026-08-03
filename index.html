@@ -361,7 +361,23 @@ BR2651131746582"></textarea>
       var inicial = r.nome.trim().charAt(0).toUpperCase() || '?';
       var btn = document.createElement('button');
       btn.className = 'resultado';
-      btn.innerHTML = '<span class="avatar">' + inicial + '</span><span><b>' + r.nome + '</b><span>ID: ' + r.id + '</span></span>';
+
+      // ponytail: monta via DOM (textContent) em vez de innerHTML+concat -
+      // nome/ID vêm do servidor, mas não custa nada não confiar em HTML livre aqui.
+      var avatar = document.createElement('span');
+      avatar.className = 'avatar';
+      avatar.textContent = inicial;
+
+      var info = document.createElement('span');
+      var nome = document.createElement('b');
+      nome.textContent = r.nome;
+      var idInfo = document.createElement('span');
+      idInfo.textContent = 'ID: ' + r.id;
+      info.appendChild(nome);
+      info.appendChild(idInfo);
+
+      btn.appendChild(avatar);
+      btn.appendChild(info);
       btn.onclick = function () { selecionarMotorista(r.id); };
       lista.appendChild(btn);
     });
