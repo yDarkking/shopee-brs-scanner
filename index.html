@@ -320,6 +320,10 @@ BR2651131746582"></textarea>
       // pra sempre esperando um callback que nunca chega.
       setTimeout(function () { resolverUmaVez(null); }, 8000);
       turnstileResolve = resolverUmaVez;
+      // ponytail: reset antes de cada execute - sem isso, a 2ª chamada em diante
+      // (ex: "Bipar mais pacotes") reaproveita estado do desafio anterior e gera
+      // um token que o servidor rejeita como inválido.
+      turnstile.reset(turnstileWidgetId);
       turnstile.execute(turnstileWidgetId);
     });
   }
