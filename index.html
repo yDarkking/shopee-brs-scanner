@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
   :root {
     --laranja: #EE4D2D; --laranja-2: #FF6A3D; --laranja-escuro: #C73A1E;
@@ -267,6 +268,7 @@ BR2651131746582"></textarea>
   </div>
 
   <div class="toast" id="toast"></div>
+  <div id="turnstileBox" style="display:none"></div>
 </div>
 
 <script>
@@ -277,6 +279,40 @@ BR2651131746582"></textarea>
   var CHAVE_CONTADOR_PESSOAL = 'ajustaai_total_bipados';
 
   var PADRAO_BR = /^BR[A-Z0-9]{8,20}$/;
+
+  // ------- Turnstile (verifica que o envio vem de navegador real, não script) -------
+  // Site Key é pública por design - a Secret Key correspondente vai só no Worker
+  // (TURNSTILE_SECRET_KEY), nunca aqui.
+  var TURNSTILE_SITE_KEY = '0x4AAAAAAEFsELfUjO4wU2Ax';
+  var turnstileWidgetId = null;
+  var turnstileResolve = null;
+
+  function inicializarTurnstile() {
+    if (typeof turnstile === 'undefined') { setTimeout(inicializarTurnstile, 200); return; }
+    turnstileWidgetId = turnstile.render('#turnstileBox', {
+      sitekey: TURNSTILE_SITE_KEY,
+      size: 'invisible',
+      execution: 'execute',
+      callback: function (token) {
+        if (turnstileResolve) { turnstileResolve(token); turnstileResolve = null; }
+      },
+      'error-callback': function () {
+        if (turnstileResolve) { turnstileResolve(null); turnstileResolve = null; }
+      }
+    });
+  }
+  inicializarTurnstile();
+
+  // ponytail: execution:'execute' gera o token só na hora do envio (não no load da
+  // página) - evita token expirado se o motorista demorar bipando vários pacotes
+  // antes de mandar.
+  function obterTurnstileToken() {
+    return new Promise(function (resolve) {
+      if (turnstileWidgetId === null) { resolve(null); return; }
+      turnstileResolve = resolve;
+      turnstile.execute(turnstileWidgetId);
+    });
+  }
 
   var estado = { driverId: '', driverNome: '', stationNome: '' };
   var COLETADOS = [];
@@ -566,13 +602,16 @@ BR2651131746582"></textarea>
     btn.innerHTML = '<span class="spinner"></span> Enviando...';
     pararCamera();
 
-    fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'enviarBrs',
-        payload: { driverId: estado.driverId, driverNome: estado.driverNome, stationNome: estado.stationNome, brs: COLETADOS }
-      })
+    obterTurnstileToken().then(function (turnstileToken) {
+      return fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'enviarBrs',
+          payload: { driverId: estado.driverId, driverNome: estado.driverNome, stationNome: estado.stationNome, brs: COLETADOS },
+          turnstileToken: turnstileToken
+        })
+      });
     })
       .then(function (r) { return r.json(); })
       .then(function (resp) {
