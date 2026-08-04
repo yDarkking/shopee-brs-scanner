@@ -278,9 +278,9 @@ BR2651131746582"></textarea>
   var API_URL = 'https://brs-sheets-api.fluxodriverlba29-brs.workers.dev/';
   var CHAVE_CONTADOR_PESSOAL = 'ajustaai_total_bipados';
 
-  // ponytail: mesmo padrão do worker (BR + "26" + 10 dígitos + 1 alfanumérico).
-  // Tem que bater com o do servidor, senão o código é aceito na tela e recusado só
-  // no envio. A validação que vale é a de lá; esta é pro retorno imediato.
+  // ponytail: tem que ser IDÊNTICO ao do worker, senão o código é aceito na tela e
+  // recusado só no envio. BR + "26" + 12 dígitos + 1 caractere (letra ou dígito).
+  // O prefixo "26" é o que barra recado em letra.
   var PADRAO_BR = /^BR26\d{10}[A-Z0-9]$/;
 
   // ------- Turnstile (verifica que o envio vem de navegador real, não script) -------
@@ -627,6 +627,16 @@ BR2651131746582"></textarea>
     })
       .then(function (r) { return r.json(); })
       .then(function (resp) {
+        // ponytail: fetch não estoura em 400/403, então sem esta checagem uma recusa
+        // do servidor caía no caminho de sucesso e mostrava "0 pacotes registrados
+        // com sucesso" na tela final - o motorista não via o motivo, e nem quem fosse
+        // investigar depois. Mostra a mensagem que o servidor mandou.
+        if (!resp || !resp.gravados) {
+          btn.disabled = false;
+          renderizarLista(false);
+          mostrarToast((resp && resp.erro) ? resp.erro : 'Não deu pra enviar agora. Tenta de novo.', 'erro');
+          return;
+        }
         document.getElementById('descFinal').textContent = resp.gravados + ' pacote' + (resp.gravados === 1 ? '' : 's') + ' registrado' + (resp.gravados === 1 ? '' : 's') + ' com sucesso.';
         var total = registrarContadorPessoal(resp.gravados);
         if (total > 0) {
