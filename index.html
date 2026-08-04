@@ -268,7 +268,7 @@ BR2651131746582"></textarea>
   </div>
 
   <div class="toast" id="toast"></div>
-  <div id="turnstileBox" style="display:none"></div>
+  <div id="turnstileBox"></div>
 </div>
 
 <script>
@@ -309,7 +309,17 @@ BR2651131746582"></textarea>
   function obterTurnstileToken() {
     return new Promise(function (resolve) {
       if (turnstileWidgetId === null) { resolve(null); return; }
-      turnstileResolve = resolve;
+      var resolvido = false;
+      var resolverUmaVez = function (valor) {
+        if (resolvido) return;
+        resolvido = true;
+        resolve(valor);
+      };
+      // ponytail: timeout de segurança - se o desafio travar (ad-blocker, rede),
+      // o motorista vê erro e pode tentar de novo, em vez do app ficar preso
+      // pra sempre esperando um callback que nunca chega.
+      setTimeout(function () { resolverUmaVez(null); }, 8000);
+      turnstileResolve = resolverUmaVez;
       turnstile.execute(turnstileWidgetId);
     });
   }
