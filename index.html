@@ -205,7 +205,7 @@
       <h1>Quem é você?</h1>
       <p class="desc">Digite seu nome ou seu ID de motorista.</p>
       <input class="campo-busca" id="inputBusca" type="text" placeholder="Nome ou ID" autocomplete="off" oninput="onDigitarBusca()">
-      <div class="carregando" id="carregandoMotoristas" style="display:none"><span class="spinner-laranja"></span> Carregando motoristas...</div>
+      <div class="carregando" id="carregandoMotoristas" style="display:none"><span class="spinner-laranja"></span> Buscando...</div>
       <div class="lista-resultados" id="listaResultados"></div>
       <div class="aviso" id="avisoBusca" style="display:none">Nenhum motorista encontrado.</div>
     </section>
@@ -339,29 +339,13 @@ BR2651131746582"></textarea>
   var CAMERA_ATIVA = false;
   var AUDIO_CTX = null;
 
-  // ------- Carga de motoristas -------
-  var DADOS = { prontos: false, erro: false, motoristas: [], porId: null, stationsPorId: null };
-
-  function carregarDadosIniciais() {
-    fetch(API_URL + '?action=carregarDados')
-      .then(function (r) { return r.json(); })
-      .then(function (resp) {
-        DADOS.motoristas = resp.motoristas;
-        DADOS.porId = {};
-        resp.motoristas.forEach(function (m) { DADOS.porId[m.id] = m; });
-        DADOS.stationsPorId = {};
-        resp.stations.forEach(function (s) { DADOS.stationsPorId[s.id] = s.nome; });
-        DADOS.prontos = true;
-        document.getElementById('carregandoMotoristas').style.display = 'none';
-        if (document.getElementById('inputBusca').value.trim().length >= 2) onDigitarBusca();
-      })
-      .catch(function () {
-        DADOS.erro = true;
-        document.getElementById('carregandoMotoristas').style.display = 'none';
-        mostrarToast('Não deu pra carregar a lista de motoristas. Recarregue a página.', 'erro');
-      });
-  }
-  carregarDadosIniciais();
+  // ------- Busca de motorista (no servidor) -------
+  // ponytail: a lista completa não vem mais pro navegador. Antes, abrir a página
+  // baixava a base inteira (~3 MB) e qualquer um que soubesse a URL tinha todos os
+  // motoristas de uma vez. Agora o servidor devolve só os 15 resultados do que foi
+  // digitado. Criptografar a lista não adiantaria: pra filtrar no cliente, a chave
+  // teria que estar no cliente também.
+  var RESULTADOS_ATUAIS = {};
 
   function irPara(passo) {
     document.querySelectorAll('.step').forEach(function (s) { s.classList.remove('ativo'); });
@@ -381,35 +365,46 @@ BR2651131746582"></textarea>
 
   // ------- Passo 1: busca -------
   var timerBusca = null;
+  var buscaEmVoo = 0;
   function onDigitarBusca() {
     clearTimeout(timerBusca);
     var termo = document.getElementById('inputBusca').value.trim();
     if (termo.length < 2) {
       document.getElementById('listaResultados').innerHTML = '';
+      document.getElementById('avisoBusca').style.display = 'none';
       document.getElementById('carregandoMotoristas').style.display = 'none';
       return;
     }
-    if (!DADOS.prontos && !DADOS.erro) {
-      document.getElementById('carregandoMotoristas').style.display = 'flex';
-      document.getElementById('listaResultados').innerHTML = '';
-      return;
-    }
+    // ponytail: 300ms de espera (não 150) porque agora cada busca é uma ida ao
+    // servidor, não um filtro local - segura melhor quem digita rápido.
     timerBusca = setTimeout(function () {
-      if (!DADOS.prontos) return;
-      var termoLower = termo.toLowerCase();
-      var resultados = [];
-      for (var i = 0; i < DADOS.motoristas.length && resultados.length < 15; i++) {
-        var m = DADOS.motoristas[i];
-        if (m.nome.toLowerCase().indexOf(termoLower) !== -1 || m.id.toLowerCase().indexOf(termoLower) !== -1) resultados.push(m);
-      }
-      mostrarResultadosBusca(resultados);
-    }, 150);
+      document.getElementById('carregandoMotoristas').style.display = 'flex';
+      document.getElementById('avisoBusca').style.display = 'none';
+      var meuId = ++buscaEmVoo;
+      fetch(API_URL + '?action=buscarMotorista&q=' + encodeURIComponent(termo))
+        .then(function (r) { return r.json(); })
+        .then(function (resp) {
+          // ponytail: descarta resposta de busca antiga que chegou fora de ordem,
+          // senão o resultado de um termo já apagado sobrescreve o atual.
+          if (meuId !== buscaEmVoo) return;
+          document.getElementById('carregandoMotoristas').style.display = 'none';
+          mostrarResultadosBusca(resp.motoristas || []);
+        })
+        .catch(function () {
+          if (meuId !== buscaEmVoo) return;
+          document.getElementById('carregandoMotoristas').style.display = 'none';
+          document.getElementById('listaResultados').innerHTML = '';
+          mostrarToast('Não deu pra buscar agora. Tenta de novo.', 'erro');
+        });
+    }, 300);
   }
 
   function mostrarResultadosBusca(resultados) {
     var lista = document.getElementById('listaResultados');
     lista.innerHTML = '';
     document.getElementById('avisoBusca').style.display = (resultados.length === 0) ? 'block' : 'none';
+    RESULTADOS_ATUAIS = {};
+    resultados.forEach(function (r) { RESULTADOS_ATUAIS[r.id] = r; });
     resultados.forEach(function (r) {
       var inicial = r.nome.trim().charAt(0).toUpperCase() || '?';
       var btn = document.createElement('button');
@@ -437,11 +432,11 @@ BR2651131746582"></textarea>
   }
 
   function selecionarMotorista(driverId) {
-    var info = DADOS.porId[driverId];
+    var info = RESULTADOS_ATUAIS[driverId];
     if (!info) return;
     estado.driverId = info.id;
     estado.driverNome = info.nome;
-    estado.stationNome = DADOS.stationsPorId[info.stationId] || '';
+    estado.stationNome = info.stationNome || '';
 
     var inicial = info.nome.trim().charAt(0).toUpperCase() || '?';
     document.getElementById('avatarDriver').textContent = inicial;
