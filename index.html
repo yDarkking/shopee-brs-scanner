@@ -279,10 +279,9 @@ BR2651131746582"></textarea>
   var CHAVE_CONTADOR_PESSOAL = 'ajustaai_total_bipados';
 
   // ponytail: tem que ser IDÊNTICO ao do worker, senão o código é aceito na tela e
-  // recusado só no envio. Comprimento folgado de propósito: existe código legítimo
-  // com 13 dígitos, e recusar entrega boa é pior que aceitar variação de tamanho.
-  // O prefixo "26" é o que barra recado em letra. Último caractere aceita dígito.
-  var PADRAO_BR = /^BR26\d{10,14}[A-Z0-9]?$/;
+  // recusado só no envio. BR + "26" + 12 dígitos + 1 caractere (letra ou dígito).
+  // O prefixo "26" é o que barra recado em letra.
+  var PADRAO_BR = /^BR26\d{10}[A-Z0-9]$/;
 
   // ------- Turnstile (verifica que o envio vem de navegador real, não script) -------
   // Site Key é pública por design - a Secret Key correspondente vai só no Worker
