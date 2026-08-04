@@ -291,7 +291,7 @@ BR2651131746582"></textarea>
     if (typeof turnstile === 'undefined') { setTimeout(inicializarTurnstile, 200); return; }
     turnstileWidgetId = turnstile.render('#turnstileBox', {
       sitekey: TURNSTILE_SITE_KEY,
-      size: 'invisible',
+      appearance: 'execute',
       execution: 'execute',
       callback: function (token) {
         if (turnstileResolve) { turnstileResolve(token); turnstileResolve = null; }
