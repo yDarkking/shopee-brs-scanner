@@ -172,6 +172,15 @@
   .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.5); border-top-color: #fff; border-radius: 50%; animation: girar .7s linear infinite; }
   @keyframes girar { to { transform: rotate(360deg); } }
 
+  /* Turnstile: fora do fluxo da página, então nunca empurra nem cria espaço em branco.
+     Não pode usar display:none - o widget precisa renderizar de verdade pra funcionar. */
+  #turnstileBox {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    z-index: 70; pointer-events: none;
+  }
+  #turnstileBox > * { pointer-events: auto; }
+
   @media (prefers-reduced-motion: reduce) {
     .step.ativo, .item-br.novo, .camera-stage.sucesso::after { animation: none; }
   }
@@ -294,7 +303,10 @@ BR2651131746582"></textarea>
     if (typeof turnstile === 'undefined') { setTimeout(inicializarTurnstile, 200); return; }
     turnstileWidgetId = turnstile.render('#turnstileBox', {
       sitekey: TURNSTILE_SITE_KEY,
-      appearance: 'execute',
+      // ponytail: interaction-only mantém o widget escondido e só mostra se o desafio
+      // exigir clique de verdade - com o modo Managed, 'execute' deixava a caixa
+      // aparecendo em todo envio e poluindo a tela.
+      appearance: 'interaction-only',
       execution: 'execute',
       callback: function (token) {
         if (turnstileResolve) { turnstileResolve(token); turnstileResolve = null; }
